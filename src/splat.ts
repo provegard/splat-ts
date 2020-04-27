@@ -9,7 +9,9 @@ type SplatPropertyType = text | date | datetime | fpnumber | flag | Array<SplatP
 type SplatParameterType = SplatPropertyType // for now
 type SplatReturnType = SplatPropertyType | Promise<SplatPropertyType> | void
 
-type SplatAction = (...args: SplatParameterType[]) => SplatReturnType
+// type SplatAction = (...args: SplatParameterType[]) => SplatReturnType
+
+type SplatAction = (arg: { [s: string]: SplatParameterType }) => SplatReturnType
 
 type WithOnlySplatPropertyTypes<T> = {
     [P in keyof T]: SplatPropertyType|SplatAction;
@@ -29,6 +31,12 @@ class TheEntity2 {
     //y: RegExp
 
     constructor() {}
+
+    public okAction(): void {}
+
+    public okActionArgs(args: { x: fpnumber }): void {}
+
+    // public nok(x: fpnumber): void {}
 }
 
 function f<T>(x: Empty_Constructor_Creating_SplatType<T>): Empty_Constructor_Creating_SplatType<T> { return }
