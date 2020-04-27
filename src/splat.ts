@@ -15,45 +15,14 @@ type WithOnlySplatPropertyTypes<T> = {
     [P in keyof T]: SplatPropertyType|SplatAction;
 }
 
-type SplatClass<T> = {
-    new(...args: any[]): WithOnlySplatPropertyTypes<T>
-}
+type SplatType<T> = WithOnlySplatPropertyTypes<T>
+type Empty_Constructor_Creating_SplatType<T> = new () => SplatType<T>
 
-/*function Entity<T extends (new (...args: any[]) => WithOnlySplatPropertyTypes<InstanceType<T>>)>(_: T) {
-}
-
-function ValueObject<T extends (new (...args: any[]) => WithOnlySplatPropertyTypes<InstanceType<T>>)>(_: T) {
-}
-
-function Process<T extends (new (...args: any[]) => WithOnlySplatPropertyTypes<InstanceType<T>>)>(_: T) {
-}*/
-
-
-type NoArgConstructorXX = new () => any
-
-type InstanceTypeNoC<T> = T extends new (...args: any) => infer R ? R : any;
-type SplatTypeBase<T> = new () => WithOnlySplatPropertyTypes<InstanceTypeNoC<T>>
-    // T extends (new () => WithOnlySplatPropertyTypes<InstanceTypeNoC<T>>)
-    //     ? T
-    //     : never
-
-
-// type NoArgConstructor<T> = new () => T
-// type SplatTypeBase<T> =
-//     T extends (new () => WithOnlySplatPropertyTypes<InstanceType<T>>)
-//         ? T
-//         : never
-type SplatType<T> = new () => WithOnlySplatPropertyTypes<InstanceTypeNoC<T>>
-
-function Model<T>(cls: SplatType<T>): SplatType<T> {
+function Model<T extends Empty_Constructor_Creating_SplatType<InstanceType<T>>>(cls: T): T {
     return cls
 }
 
-type SplatType2<T> = WithOnlySplatPropertyTypes<T>
-
-type Empty_Constructor_Creating_SplatType<T> = new () => SplatType2<T>
-
-// @Model
+@Model
 class TheEntity2 {
     something(): text { return "" }
     x: fpnumber
